@@ -8,10 +8,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Builder
 @Table(name = "recipe")
 public class Recipe {
     @Id
@@ -20,10 +28,6 @@ public class Recipe {
 
     @NotBlank
     @Size(min = 3)
-    @Column(name = "name", nullable = false, length = 70)
+    @Column(name = "name", nullable = false)
     private String name;
-
-    public Recipe(String name) {
-        this.name = name;
-    }
 }

@@ -2,6 +2,10 @@ package com.example.app.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +19,56 @@ public class RecipesRepositoryTests {
     @Autowired
     private IRecipeRepository recipeRepository;
 
+    private Recipe recipe;
+
+    @BeforeEach
+    void setup() {
+        recipe = Recipe.builder().name("Recipe tes2 1").build();
+    }
+
     @Test
     @DisplayName("Save recipe")
     void testSaveRecipe() {
-        Recipe recipe_1 = new Recipe("Recipe 1 test");
 
-        Recipe savedRecipe = recipeRepository.save(recipe_1);
+        Recipe savedRecipe = recipeRepository.save(recipe);
 
         assertThat(savedRecipe).isNotNull();
         assertThat(savedRecipe.getId()).isGreaterThan(0);
     }
 
-}
+    @Test
+    @DisplayName("get all recipes test")
+    void testGetAllREcipes() {
+        Recipe recipe2 = Recipe.builder().name("Recipe test 2").build();
+
+        recipeRepository.save(recipe2);
+        recipeRepository.save(recipe);
+
+        List<Recipe> allRecipes = recipeRepository.findAll();
+
+        assertThat(allRecipes).isNotNull();
+        assertThat(allRecipes.size()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("get recipe by id")
+    void testGetRecipeById() {
+        recipeRepository.save(recipe);
+
+        Recipe recipeBD = recipeRepository.findById(recipe.getId()).get();
+
+        assertThat(recipeBD).isNotNull();
+    }
+
+    @Test
+    @DisplayName("delete recipe")
+    void testDeleteRecipe() {
+        recipeRepository.save(recipe);
+
+        recipeRepository.deleteById(recipe.getId());
+        Optional<Recipe> recipeOptional = recipeRepository.findById(recipe.getId());
+
+        assertThat(recipeOptional).isEmpty();
+    }
+
+};
