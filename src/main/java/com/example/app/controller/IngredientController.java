@@ -37,7 +37,7 @@ public class IngredientController {
 
     }
 
-    @PostMapping("/ingredients")
+    @PostMapping("/admin/ingredients")
     public ResponseEntity<Ingredient> createIngredient(@Valid @RequestBody Ingredient newIngredient) {
         try {
             ingredientRepository.save(newIngredient);
@@ -57,7 +57,7 @@ public class IngredientController {
         }
     }
 
-    @DeleteMapping("/ingredients/{id}")
+    @DeleteMapping("/admin/ingredients/{id}")
     public ResponseEntity<HttpStatus> deleteIngredient(@Valid @PathVariable("id") long id) {
         try {
             ingredientRepository.deleteById(id);
@@ -67,7 +67,7 @@ public class IngredientController {
         }
     }
 
-    @PutMapping("/ingredients/{id}")
+    @PutMapping("/admin/ingredients/{id}")
     public ResponseEntity<Ingredient> updateIngredient(@Valid @PathVariable("id") long id,
             @Valid @RequestBody Ingredient updatedIngredient) {
         try {

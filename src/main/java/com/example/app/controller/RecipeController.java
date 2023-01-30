@@ -35,7 +35,7 @@ public class RecipeController {
         }
     }
 
-    @PostMapping("/recipes")
+    @PostMapping("/admin/recipes")
     public ResponseEntity<Recipe> createRecipe(@Valid @RequestBody Recipe newRecipe) {
         try {
             recipeService.saveRecipe(newRecipe);
@@ -45,7 +45,7 @@ public class RecipeController {
         }
     }
 
-    @DeleteMapping("/recipes/{id}")
+    @DeleteMapping("/admin/recipes/{id}")
     public ResponseEntity<String> deleteRecipe(@Valid @PathVariable("id") long id) {
         try {
             recipeService.deleteRecipe(id);
