@@ -23,7 +23,8 @@ public class RecipesRepositoryTests {
 
     @BeforeEach
     void setup() {
-        recipe = Recipe.builder().name("Recipe tes2 1").build();
+        recipe = Recipe.builder().id(1L).name("Recipe tes2 1").build();
+        System.out.println(recipe);
     }
 
     @Test
@@ -39,7 +40,7 @@ public class RecipesRepositoryTests {
     @Test
     @DisplayName("get all recipes test")
     void testGetAllREcipes() {
-        Recipe recipe2 = Recipe.builder().name("Recipe test 2").build();
+        Recipe recipe2 = Recipe.builder().id(2L).name("Recipe test 2").build();
 
         recipeRepository.save(recipe2);
         recipeRepository.save(recipe);

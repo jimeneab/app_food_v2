@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.app.entity.Ingredient;
 import com.example.app.repository.IIngredientRepository;
+
+import jakarta.validation.Valid;
 
 @RestController
 public class IngredientController {
@@ -29,44 +32,44 @@ public class IngredientController {
             List<Ingredient> ingredients = ingredientRepository.findAll();
             return new ResponseEntity<>(ingredients, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
     }
 
     @PostMapping("/ingredients")
-    public ResponseEntity<Ingredient> createIngredient(@RequestBody Ingredient newIngredient) {
+    public ResponseEntity<Ingredient> createIngredient(@Valid @RequestBody Ingredient newIngredient) {
         try {
             ingredientRepository.save(newIngredient);
             return new ResponseEntity<>(newIngredient, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
         }
     }
 
     @GetMapping("/ingredients/{id}")
-    public ResponseEntity<Ingredient> getIngredient(@PathVariable("id") long id) {
+    public ResponseEntity<Ingredient> getIngredient(@Valid @PathVariable("id") long id) {
         try {
             Optional<Ingredient> ingredient = ingredientRepository.findById(id);
             return new ResponseEntity<>(ingredient.get(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 
     @DeleteMapping("/ingredients/{id}")
-    public ResponseEntity<HttpStatus> deleteIngredient(@PathVariable("id") long id) {
+    public ResponseEntity<HttpStatus> deleteIngredient(@Valid @PathVariable("id") long id) {
         try {
             ingredientRepository.deleteById(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping("/ingredients/{id}")
-    public ResponseEntity<Ingredient> updateIngredient(@PathVariable("id") long id,
-            @RequestBody Ingredient updatedIngredient) {
+    public ResponseEntity<Ingredient> updateIngredient(@Valid @PathVariable("id") long id,
+            @Valid @RequestBody Ingredient updatedIngredient) {
         try {
             Optional<Ingredient> currentIngredient = ingredientRepository.findById(id);
             if (currentIngredient.isPresent()) {
@@ -81,7 +84,7 @@ public class IngredientController {
             }
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.NOT_MODIFIED);
         }
     }
 

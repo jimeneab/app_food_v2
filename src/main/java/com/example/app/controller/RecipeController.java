@@ -12,9 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.app.entity.Recipe;
 import com.example.app.service.RecipeService;
+
+import jakarta.validation.Valid;
 
 @RestController
 public class RecipeController {
@@ -28,37 +31,37 @@ public class RecipeController {
             List<Recipe> recipes = recipeService.getAllRecipes();
             return new ResponseEntity<>(recipes, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping("/recipes")
-    public ResponseEntity<Recipe> createRecipe(@RequestBody Recipe newRecipe) {
+    public ResponseEntity<Recipe> createRecipe(@Valid @RequestBody Recipe newRecipe) {
         try {
             recipeService.saveRecipe(newRecipe);
             return new ResponseEntity<>(newRecipe, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
         }
     }
 
     @DeleteMapping("/recipes/{id}")
-    public ResponseEntity<String> deleteRecipe(@PathVariable("id") long id) {
+    public ResponseEntity<String> deleteRecipe(@Valid @PathVariable("id") long id) {
         try {
             recipeService.deleteRecipe(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<String>("Recipe deleted", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/recipes/{id}")
-    public ResponseEntity<Recipe> getRecipe(@PathVariable("id") long id) {
+    public ResponseEntity<Recipe> getRecipe(@Valid @PathVariable("id") long id) {
         try {
             Optional<Recipe> recipe = recipeService.getRecipeById(id);
             return new ResponseEntity<>(recipe.get(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 
